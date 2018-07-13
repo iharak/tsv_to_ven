@@ -22,14 +22,28 @@ for (i in 1:samplenum){
 #Normalの２、３、４列目に着目する
 target <- paste(sample1[, 2], sample1[, 3], sample1[, 4], sep="-")
 
+dir.create("./output")
 #sampleの２、３、４列目に着目してNormalと共通しないものについてはresとしてだす
 for(i in 2:samplenum){
+	j <- i - 1
 	assign(paste0("minus", i), 
 	paste(get(paste0("sample", i))[, 2],
               get(paste0("sample", i))[, 3], 
               get(paste0("sample", i))[, 4],
               sep="-"))
-          assign(paste0("res", i), get(paste0("sample", i))[! target %in% get(paste0("minus", i) ), ])}
+          assign(paste0("res", i), get(paste0("sample", i))[! target %in% get(paste0("minus", i) ), ])
+	sample <- get(paste0("minus", i))
+	file.create(paste0("./output/res", j, ".tsv"))
+	file_name <- paste0("./output/res", j, ".tsv")
+	write.table(sample, file_name, sep="\t", col.names=F, quote=F)
+	sample_name <- paste0("L", j)
+	venn_list <- list(target, sample)
+	names(venn_list) <- c("N1", sample_name)
+	pdf_name <- paste0("./output/venn", j, ".pdf")
+	pdf(paste0(pdf_name))
+	venn(venn_list)
+	dev.off()
+}
 
 #resのうちの共通部分について取ってくる
 for(i in 2:samplenum){
@@ -56,6 +70,5 @@ for(i in 2:samplenum){
 	res_data <- c(res_data, list(get(paste0("L", i - 1))))
 }
 venn(res_data)
-pdf("venn.pdf")
-venn(res_data)
+pdf("./output/total_res_ven.pdf")
 dev.off()

@@ -2,3 +2,4 @@
 *.tsv
 .RData
 .Rhistory
+*.log

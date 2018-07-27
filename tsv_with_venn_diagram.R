@@ -17,6 +17,7 @@ pdf_name <- paste0(output,
                    "/venn_",
                    file_index,
                    ".pdf")
+color_num <- c(1:(length(args) - 1))
 # count the number of sample files
 samplenum <- length(args)
 loopnum <- samplenum - 1
@@ -34,7 +35,7 @@ for (i in 1:samplenum){
 # extract 2nd, 3rd,and 4th columns of normal.tsv
 target <- paste(sample1[, 2], sample1[, 3], sample1[, 4], sep="-")
 if (file.exists(output)){
-    print("./output already exists")
+    print(paste0(output, " already exists"))
 } else {
     dir.create(output)
 } 
@@ -118,6 +119,6 @@ for(i in 2:samplenum){
 }
 names(res_data) <- latters
 pdf(file=paste0(output, "/total_res_ven.pdf"))
-temp <- venn.diagram(res_data, fill=c(1,2,3,4), alpha=0.2, filename=NULL)
+temp <- venn.diagram(res_data, fill=color_num, alpha=0.2, filename=NULL)
 grid.draw(temp)
 dev.off()
